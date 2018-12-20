@@ -1,0 +1,150 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>cn.sj</groupId>
+	<artifactId>sj-registry</artifactId>
+	<version>${project.release.version}</version>
+	<packaging>pom</packaging>
+
+	<name>${project.artifactId}</name>
+	<description></description>
+	<url>http://www.owlj.cn/</url>
+
+	<modules>
+		<module>sj-registry-client</module>
+		<module>sj-registry-admin</module>
+	</modules>
+
+	<properties>
+	    <project.release.version>0.1-SNAPSHOT</project.release.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+
+		<maven.test.skip>true</maven.test.skip>
+
+		<slf4j-api.version>1.7.25</slf4j-api.version>
+		<junit.version>4.12</junit.version>
+
+		<spring-boot.version>1.5.17.RELEASE</spring-boot.version>
+		<mybatis-spring-boot-starter.version>1.3.2</mybatis-spring-boot-starter.version>
+		<mysql-connector-java.version>5.1.47</mysql-connector-java.version>
+
+        <github.global.server>github</github.global.server>
+	</properties>
+
+	<build>
+		<extensions>
+	      <extension>
+	        <groupId>org.apache.maven.wagon</groupId>
+	        <artifactId>wagon-ssh</artifactId>
+	        <version>3.2.0</version>
+	      </extension>
+	    </extensions>
+	</build>
+
+	<licenses>
+		<license>
+			<name>GNU General Public License version 3</name>
+			<url>https://opensource.org/licenses/GPL-3.0</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>owlj</id>
+			<name>liushengjie</name>
+			<email>liushengjie86@qq.com</email>
+			<url>https://github.com/liushengjie</url>
+		</developer>
+	</developers>
+
+	<profiles>
+		<profile>
+			<id>release</id>
+			<properties>
+	            <project.release.version>0.1</project.release.version>
+	        </properties>
+			<build>
+				<plugins>
+					<!-- Source -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>3.0.1</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- Javadoc -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>3.0.0</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+								<configuration> 
+					              <doclint>none</doclint> 
+					            </configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+		                <artifactId>maven-deploy-plugin</artifactId>
+		                <version>2.8.1</version>
+		                <configuration>
+		                    <altDeploymentRepository>internal.repo::default::file://${project.build.directory}/maven-repo</altDeploymentRepository>
+		                </configuration>
+		            </plugin>
+		            <plugin>
+		                <groupId>com.github.github</groupId>
+		                <artifactId>site-maven-plugin</artifactId>
+		                <version >0.12</version>
+		                <configuration>
+		                    <message >Maven artifacts for ${project.version}</message>
+		                    <noJekyll>true</noJekyll>
+		                    <outputDirectory>${project.build.directory}/maven-repo</outputDirectory><!--本地jar地址-->
+		                    <branch>refs/heads/master</branch><!--分支-->
+		                    <merge>true</merge>
+		                    <includes>
+		                        <include>**/*</include>
+		                    </includes>
+		                    <repositoryName>maven-repo</repositoryName><!--对应github上创建的仓库名称 name-->
+		                    <repositoryOwner>liushengjie</repositoryOwner><!--github 仓库所有者-->
+		                </configuration>
+		                <executions>
+		                    <execution>
+		                        <goals>
+		                            <goal>site</goal>
+		                        </goals>
+		                        <phase>deploy</phase>
+		                    </execution>
+		                </executions>
+		            </plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	<distributionManagement>
+         <snapshotRepository>
+             <id>owlj-repos</id>
+             <url>scp://212.64.93.90/root/repos/snapshots</url>
+         </snapshotRepository>
+         <repository>
+             <id>owlj-repos</id>
+             <url>scp://212.64.93.90/root/repos/release</url>
+         </repository>
+     </distributionManagement>
+
+</project>
